@@ -4,6 +4,7 @@ package publicrelay
 import (
 	"context"
 	"errors"
+	"strings"
 	"time"
 )
 
@@ -16,9 +17,31 @@ var relays = []string{
 	"4.getcroc.com:9009",
 }
 
+// Pool optionally replaces the default relay pool for self-hosted builds. It
+// is a comma-separated, ordered list of host:port relays set at link time:
+//
+//	-ldflags "-X github.com/schollz/croc/v11/src/publicrelay.Pool=relay.example.com:9009"
+//
+// Every croc and croc-web binary that shares codes must use the same Pool,
+// because a code's relay is chosen by its index within the pool.
+var Pool string
+
 // Relays returns a copy of the protocol-ordered public relay pool.
 func Relays() []string {
+	if pool := parsePool(Pool); len(pool) > 0 {
+		return pool
+	}
 	return append([]string(nil), relays...)
+}
+
+func parsePool(value string) []string {
+	var pool []string
+	for relay := range strings.SplitSeq(value, ",") {
+		if relay = strings.TrimSpace(relay); relay != "" {
+			pool = append(pool, relay)
+		}
+	}
+	return pool
 }
 
 // Probe measures one complete croc ping/pong exchange.

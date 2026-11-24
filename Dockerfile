@@ -16,13 +16,26 @@ RUN npm ci --prefix web \
 ARG TARGETOS
 ARG TARGETARCH
 ARG TARGETVARIANT
+# Optional self-hosting defaults (see deploy/selfhost/README.md). Empty values
+# keep the upstream public relay pool and web origin.
+ARG CROC_RELAY_POOL=
+ARG CROC_WEB_URL=
 RUN if [ -n "$TARGETVARIANT" ]; then export GOARM="${TARGETVARIANT#v}"; fi \
+    && pkg=github.com/schollz/croc/v11/src \
+    && ldflags="-s -w -buildid=" \
+    && if [ -n "$CROC_RELAY_POOL" ]; then \
+         first_relay="${CROC_RELAY_POOL%%,*}"; \
+         ldflags="$ldflags -X $pkg/publicrelay.Pool=$CROC_RELAY_POOL -X $pkg/models.DEFAULT_RELAY=$first_relay -X $pkg/models.DEFAULT_RELAY6=$first_relay"; \
+       fi \
+    && if [ -n "$CROC_WEB_URL" ]; then \
+         ldflags="$ldflags -X $pkg/models.DEFAULT_WEB_URL=$CROC_WEB_URL"; \
+       fi \
     && CGO_ENABLED=0 GOOS="$TARGETOS" GOARCH="$TARGETARCH" \
        go build -buildvcs=false -trimpath -tags netgo,osusergo \
-       -ldflags="-s -w -buildid=" -o /out/croc . \
+       -ldflags="$ldflags" -o /out/croc . \
     && CGO_ENABLED=0 GOOS="$TARGETOS" GOARCH="$TARGETARCH" \
        go build -buildvcs=false -trimpath -tags netgo,osusergo \
-       -ldflags="-s -w -buildid=" -o /out/croc-web ./cmd/croc-web
+       -ldflags="$ldflags" -o /out/croc-web ./cmd/croc-web
 
 FROM alpine:latest
 

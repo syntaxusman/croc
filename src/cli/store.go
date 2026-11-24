@@ -14,6 +14,7 @@ import (
 	"github.com/rivo/uniseg"
 	"github.com/schollz/croc/v11/internal/cli"
 	"github.com/schollz/croc/v11/src/croc"
+	"github.com/schollz/croc/v11/src/models"
 	storeapi "github.com/schollz/croc/v11/src/store"
 	"github.com/schollz/croc/v11/src/storeclient"
 	"github.com/schollz/croc/v11/src/storecrypto"
@@ -28,7 +29,7 @@ func storedUploadFlags(prefix string) []cli.Flag {
 	return []cli.Flag{
 		&cli.IntFlag{Name: prefix + "downloads", Value: 1, Usage: "number of verified downloads allowed in stored mode"},
 		&cli.StringFlag{Name: prefix + "expiration", Value: "1d", Usage: "stored lifetime after upload (for example 90m, 12h, 3d, or 2w)"},
-		&cli.StringFlag{Name: prefix + "url", Value: "https://getcroc.com", Usage: "stored-transfer service origin", EnvVars: []string{"CROC_STORE_URL"}},
+		&cli.StringFlag{Name: prefix + "url", Value: models.DEFAULT_WEB_URL, Usage: "stored-transfer service origin", EnvVars: []string{"CROC_STORE_URL"}},
 	}
 }
 

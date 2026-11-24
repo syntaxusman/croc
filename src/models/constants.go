@@ -17,11 +17,14 @@ const TCP_BUFFER_SIZE = 1024 * 64
 
 // Default relay addresses retain their hostnames until dialing so proxies can
 // resolve them remotely. DEFAULT_RELAY can be overridden using --relay.
+// Self-hosted builds may replace the string defaults at link time with
+// -ldflags "-X github.com/schollz/croc/v11/src/models.NAME=value".
 var (
 	DEFAULT_RELAY      = "croc.schollz.com:9009"
 	DEFAULT_RELAY6     = "croc6.schollz.com:9009"
 	DEFAULT_PORT       = "9009"
 	DEFAULT_PASSPHRASE = "pass123"
+	DEFAULT_WEB_URL    = "https://getcroc.com"
 	INTERNAL_DNS       = false
 )
 

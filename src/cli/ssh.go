@@ -169,7 +169,7 @@ func formatSSHBrowserLinks(readWriteSecret, readOnlySecret string) string {
 }
 
 func sshBrowserURL(secret string) string {
-	return "https://getcroc.com/#ssh?code=" + url.QueryEscape(secret)
+	return strings.TrimSuffix(models.DEFAULT_WEB_URL, "/") + "/#ssh?code=" + url.QueryEscape(secret)
 }
 
 func formatSSHJoinCommand(secret, relay, relayPassword string, colorEnabled bool) string {

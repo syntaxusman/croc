@@ -1,0 +1,11 @@
+{$SITE_HOST} {
+	# Optional: restrict the web UI to your company. Uncomment and generate a
+	# hash with: docker compose exec caddy caddy hash-password
+	# basic_auth {
+	# 	staff $2a$14$REPLACE_WITH_HASH
+	# }
+
+	# Proxies the whole origin, including WebSocket upgrades on /ws, and keeps
+	# the original Host header, as croc-web requires.
+	reverse_proxy web:8080
+}

@@ -22,6 +22,20 @@ func TestRelaysReturnsProtocolOrderAndCopy(t *testing.T) {
 	assert.Equal(t, "1.getcroc.com:9009", Relays()[0])
 }
 
+func TestRelaysUsesBuildTimePoolOverride(t *testing.T) {
+	original := Pool
+	t.Cleanup(func() { Pool = original })
+
+	Pool = " relay.example.com:9009, ,relay2.example.com:9009 "
+	got := Relays()
+	assert.Equal(t, []string{"relay.example.com:9009", "relay2.example.com:9009"}, got)
+	got[0] = "changed"
+	assert.Equal(t, "relay.example.com:9009", Relays()[0])
+
+	Pool = " , "
+	assert.Equal(t, "1.getcroc.com:9009", Relays()[0])
+}
+
 func TestSelectFirstReturnsFirstSuccessfulProbeAndCancelsOthers(t *testing.T) {
 	canceled := make(chan string, 2)
 	probe := func(ctx context.Context, address string, _ time.Duration) (time.Duration, error) {

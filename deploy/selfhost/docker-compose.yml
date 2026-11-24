@@ -1,0 +1,95 @@
+# Self-hosted croc: relay + web client + Caddy (automatic HTTPS).
+# Copy .env.example to .env, edit it, then: docker compose up -d --build
+# See README.md in this directory for DNS, firewall, and client setup.
+
+x-croc-image: &croc-image
+  image: croc-selfhost:local
+  build:
+    context: ../..
+    args:
+      CROC_RELAY_POOL: ${RELAY_HOST:?set RELAY_HOST in .env}:9009
+      CROC_WEB_URL: https://${SITE_HOST:?set SITE_HOST in .env}
+
+services:
+  relay:
+    <<: *croc-image
+    command: ["relay"]
+    restart: unless-stopped
+    environment:
+      CROC_PASS: ${CROC_PASS:?set CROC_PASS in .env}
+      CROC_RELAY_PORTS: 9009,9010,9011,9012,9013,9014,9015,9016,9017
+    ports:
+      - "9009-9017:9009-9017/tcp"
+    networks:
+      croc:
+        # croc-web reaches the relay by its public name without leaving Docker.
+        aliases:
+          - ${RELAY_HOST}
+
+  web:
+    <<: *croc-image
+    command:
+      - web
+      - --bind
+      - 0.0.0.0:8080
+      - --relays
+      - ${RELAY_HOST}
+      - --store-dir
+      - /www/croc/storage
+      - --store-max-transfer
+      - ${STORE_MAX_TRANSFER:-1GiB}
+      - --store-quota
+      - ${STORE_QUOTA:-5GiB}
+      - --store-min-free
+      - ${STORE_MIN_FREE:-512MiB}
+      - --store-max-expiration
+      - ${STORE_MAX_EXPIRATION:-2w}
+      - --store-trusted-proxy
+      - 172.30.53.0/24
+      - ${SITE_HOST}
+    restart: unless-stopped
+    depends_on:
+      - relay
+    environment:
+      CROC_PASS: ${CROC_PASS}
+      CROC_RELAY_PORTS: 9009,9010,9011,9012,9013,9014,9015,9016,9017
+      CROC_STORE_DOWNLOADS: ${STORE_DOWNLOADS:-1}
+    volumes:
+      - croc-store:/www/croc/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/healthz >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - croc
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    depends_on:
+      - web
+    environment:
+      SITE_HOST: ${SITE_HOST}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks:
+      - croc
+
+networks:
+  croc:
+    ipam:
+      config:
+        # Fixed so croc-web can trust Caddy's X-Forwarded-For (store rate limits).
+        - subnet: 172.30.53.0/24
+
+volumes:
+  croc-store:
+  caddy-data:
+  caddy-config:

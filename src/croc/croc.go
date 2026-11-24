@@ -1982,7 +1982,7 @@ func ShowReceiveCommandQrCode(command string) {
 func webReceiveURL(origin, code string) string {
 	origin = strings.TrimSpace(origin)
 	if origin == "" {
-		origin = "https://getcroc.com"
+		origin = models.DEFAULT_WEB_URL
 	}
 	origin = strings.TrimSuffix(origin, "/")
 	return origin + "/?code=" + url.QueryEscape(code)
