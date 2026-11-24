@@ -52,6 +52,12 @@ type Config struct {
 	UmamiWebsiteID string
 	GoogleAdSense  string
 	GoogleAdsTXT   string
+	// BrandName white-labels the web client: it replaces the product name in
+	// the UI and the HTML <title>. Empty keeps the croc branding.
+	BrandName string
+	// HideCommunity hides upstream croc community content (donation banner,
+	// sponsor links, blog, and reviews) in the web client.
+	HideCommunity bool
 
 	trackCurlInstaller func()
 }
@@ -70,6 +76,12 @@ type runtimeConfig struct {
 	RelayAddresses []string           `json:"relayAddresses"`
 	RelayPassword  string             `json:"relayPassword"`
 	Store          store.PublicConfig `json:"store"`
+	Brand          runtimeBrand       `json:"brand"`
+}
+
+type runtimeBrand struct {
+	Name      string `json:"name,omitempty"`
+	Community bool   `json:"community"`
 }
 
 // Handler returns the unified croc web handler. It serves the embedded client,
@@ -84,6 +96,7 @@ func Handler(config Config) (http.Handler, error) {
 		normalized.UmamiURL,
 		normalized.UmamiWebsiteID,
 		normalized.GoogleAdSense,
+		normalized.BrandName,
 		normalized.trackCurlInstaller,
 	)
 	if err != nil {
@@ -111,6 +124,10 @@ func Handler(config Config) (http.Handler, error) {
 				}
 				return normalized.StoreService.PublicConfig()
 			}(),
+			Brand: runtimeBrand{
+				Name:      strings.TrimSpace(normalized.BrandName),
+				Community: !normalized.HideCommunity,
+			},
 		},
 		static: static,
 	}
@@ -408,6 +425,7 @@ func newStaticHandler(
 	umamiURL string,
 	umamiWebsiteID string,
 	googleAdSense string,
+	brandName string,
 	trackCurlInstaller func(),
 ) (http.Handler, error) {
 	if files == nil {
@@ -418,6 +436,7 @@ func newStaticHandler(
 	if err != nil {
 		return nil, fmt.Errorf("read stored-share entry point: %w", err)
 	}
+	shareIndex = injectBrandTitle(shareIndex, brandName)
 	htmlPages := make(map[string][]byte)
 	err = fs.WalkDir(files, ".", func(filePath string, entry fs.DirEntry, walkErr error) error {
 		if walkErr != nil {
@@ -430,6 +449,7 @@ func newStaticHandler(
 		if readErr != nil {
 			return readErr
 		}
+		page = injectBrandTitle(page, brandName)
 		page = injectUmamiScript(page, umamiURL, umamiWebsiteID)
 		page = injectGoogleAdSense(page, googleAdSense)
 		htmlPages[filePath] = page
@@ -455,6 +475,27 @@ func newStaticHandler(
 		installer:          installer,
 		trackCurlInstaller: trackCurlInstaller,
 	}, nil
+}
+
+// injectBrandTitle replaces the first <title> element's text with the brand
+// name so browser tabs and bookmarks show the white-label product.
+func injectBrandTitle(page []byte, brandName string) []byte {
+	brandName = strings.TrimSpace(brandName)
+	if brandName == "" {
+		return page
+	}
+	text := string(page)
+	start := strings.Index(text, "<title>")
+	if start < 0 {
+		return page
+	}
+	end := strings.Index(text[start:], "</title>")
+	if end < 0 {
+		return page
+	}
+	end += start
+	title := "<title>" + html.EscapeString(brandName+" — secure file transfer") + "</title>"
+	return []byte(text[:start] + title + text[end+len("</title>"):])
 }
 
 func injectGoogleAdSense(index []byte, publisherID string) []byte {

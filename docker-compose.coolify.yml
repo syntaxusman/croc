@@ -65,6 +65,10 @@ services:
       CROC_PASS: ${CROC_PASS:?}
       CROC_RELAY_PORTS: 9009,9010,9011,9012,9013,9014,9015,9016,9017
       CROC_STORE_DOWNLOADS: ${STORE_DOWNLOADS:-1}
+      # White-label: product name in the UI and page titles, and whether to
+      # hide upstream croc donation/sponsor/blog/review content.
+      CROC_BRAND_NAME: ${BRAND_NAME:-}
+      CROC_HIDE_COMMUNITY: ${HIDE_COMMUNITY:-false}
     expose:
       - "8080"
     # Reach the relay by its public name through the host's published ports,

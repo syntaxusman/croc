@@ -52,6 +52,8 @@ func newApp(ctx context.Context) *cli.App {
 		&cli.StringFlag{Name: "ports", Value: "9009,9010,9011,9012,9013,9014,9015,9016,9017", Usage: "allowed upstream relay ports"},
 		&cli.StringFlag{Name: "pass", Value: models.DEFAULT_PASSPHRASE, Usage: "password for the relay", EnvVars: []string{"CROC_PASS"}},
 		&cli.BoolFlag{Name: "debug", Usage: "enable debug logging"},
+		&cli.StringFlag{Name: "brand-name", Usage: "white-label product name shown in the web client and page titles", EnvVars: []string{"CROC_BRAND_NAME"}},
+		&cli.BoolFlag{Name: "hide-community", Usage: "hide upstream croc donation, sponsor, blog, and review content", EnvVars: []string{"CROC_HIDE_COMMUNITY"}},
 		&cli.StringFlag{Name: "store-dir", Usage: "enable encrypted temporary storage in this directory"},
 		&cli.StringFlag{Name: "store-max-transfer", Value: "1GiB", Usage: "maximum plaintext bytes per stored transfer"},
 		&cli.StringFlag{Name: "store-quota", Value: "5GiB", Usage: "maximum managed stored-transfer bytes"},
@@ -162,6 +164,8 @@ func serve(ctx context.Context, c *cli.Context) error {
 		UmamiWebsiteID: os.Getenv("UMAMI_WEBSITE_ID"),
 		GoogleAdSense:  os.Getenv("GOOGLE_ADSENSE"),
 		GoogleAdsTXT:   os.Getenv("GOOGLE_ADS_TXT"),
+		BrandName:      c.String("brand-name"),
+		HideCommunity:  c.Bool("hide-community"),
 	})
 }
 

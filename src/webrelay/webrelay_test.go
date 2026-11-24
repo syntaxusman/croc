@@ -164,7 +164,7 @@ func TestServesSiteAndRuntimeConfig(t *testing.T) {
 	assert.Equal(t, "no-store", recorder.Header().Get("Cache-Control"))
 	assert.JSONEq(
 		t,
-		`{"gatewayURL":"/ws","relayAddresses":["relay.example.test:9109"],"relayPassword":"relay-secret","store":{"enabled":false,"maxTransferBytes":0,"maxFiles":0,"maxDownloads":0,"expiresSeconds":0,"maxExpiresSeconds":0}}`,
+		`{"gatewayURL":"/ws","relayAddresses":["relay.example.test:9109"],"relayPassword":"relay-secret","store":{"enabled":false,"maxTransferBytes":0,"maxFiles":0,"maxDownloads":0,"expiresSeconds":0,"maxExpiresSeconds":0},"brand":{"community":true}}`,
 		strings.TrimSuffix(
 			strings.TrimPrefix(recorder.Body.String(), "window.__CROC_RUNTIME_CONFIG__ = "),
 			";\n",
@@ -648,4 +648,37 @@ func TestRejectsUnexpectedOrigin(t *testing.T) {
 	require.Error(t, err)
 	require.NotNil(t, response)
 	assert.Equal(t, http.StatusForbidden, response.StatusCode)
+}
+
+func TestBrandNameAndCommunityFlagReachPagesAndConfig(t *testing.T) {
+	site := testSite()
+	site["index.html"] = &fstest.MapFile{Data: []byte("<!doctype html><html><head><title>croc — fast, simple, secure file transfer</title></head><body><div id=\"root\"></div></body></html>")}
+	handler, err := Handler(Config{
+		RelayHost:     "relay.example.test",
+		AllowedPorts:  []string{"9109"},
+		StaticFiles:   site,
+		BrandName:     "  Acme <Transfer>  ",
+		HideCommunity: true,
+	})
+	require.NoError(t, err)
+
+	for _, target := range []string{"/", "/s/abc", "/blog/"} {
+		recorder := httptest.NewRecorder()
+		handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, target, nil))
+		require.Equal(t, http.StatusOK, recorder.Code, target)
+		assert.Contains(t, recorder.Body.String(), "<title>Acme &lt;Transfer&gt; — secure file transfer</title>", target)
+		assert.NotContains(t, recorder.Body.String(), "<title>croc", target)
+	}
+
+	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/config.js", nil))
+	require.Equal(t, http.StatusOK, recorder.Code)
+	assert.Contains(t, recorder.Body.String(), `"brand":{"name":"Acme \u003cTransfer\u003e","community":false}`)
+}
+
+func TestInjectBrandTitleLeavesPagesWithoutBrandOrTitleUnchanged(t *testing.T) {
+	page := []byte("<html><head><title>croc</title></head></html>")
+	assert.Equal(t, page, injectBrandTitle(page, " "))
+	untitled := []byte("<html><head></head></html>")
+	assert.Equal(t, untitled, injectBrandTitle(untitled, "Acme"))
 }

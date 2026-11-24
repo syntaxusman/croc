@@ -22,6 +22,12 @@ import {
 } from "lucide-react";
 import crocIllustration from "./assets/croc.jpg?inline";
 import {
+  brandInitials,
+  brandName,
+  isWhiteLabel,
+  showCommunity,
+} from "./brand";
+import {
   trackTransferEvent,
   transferEvents,
 } from "./analytics";
@@ -1263,6 +1269,7 @@ export function App() {
   return (
     <>
       <main className="site-shell">
+      {showCommunity && (
       <aside className="donation-banner" aria-label="Support croc">
         <div className="donation-copy">
           <Heart aria-hidden="true" />
@@ -1281,16 +1288,30 @@ export function App() {
           Donate $1
         </a>
       </aside>
+      )}
 
-      <header className="site-header">
-        <a className="brand-link" href="/" aria-label="Go to croc home">
-          <img
-            className="brand-illustration"
-            src={crocIllustration}
-            width="408"
-            height="196"
-            alt="Hand-drawn green crocodile floating in blue water"
-          />
+      <header className={`site-header${isWhiteLabel ? " white-label" : ""}`}>
+        <a
+          className="brand-link"
+          href="/"
+          aria-label={`Go to ${brandName} home`}
+        >
+          {isWhiteLabel ? (
+            <span className="brand-wordmark">
+              <span className="brand-mark" aria-hidden="true">
+                {brandInitials()}
+              </span>
+              <span className="brand-name">{brandName}</span>
+            </span>
+          ) : (
+            <img
+              className="brand-illustration"
+              src={crocIllustration}
+              width="408"
+              height="196"
+              alt="Hand-drawn green crocodile floating in blue water"
+            />
+          )}
         </a>
         <div>
           <h1>
@@ -1298,7 +1319,9 @@ export function App() {
               ? "Receive files, secured end-to-end."
               : task === "ssh"
                 ? "Join a terminal, secured end-to-end."
-                : "croc: end-to-end encrypted transfers."}
+                : isWhiteLabel
+                  ? "End-to-end encrypted file transfers."
+                  : "croc: end-to-end encrypted transfers."}
           </h1>
         </div>
       </header>
@@ -1957,26 +1980,32 @@ export function App() {
         </div>
       </dialog>
 
-      <div className="home-resources">
+      <div
+        className={`home-resources${showCommunity ? "" : " single"}`}
+      >
         <CliDownload />
-        <BlogTeaser />
+        {showCommunity && <BlogTeaser />}
       </div>
 
-      {!receiveOnly && <HomeReviews />}
+      {showCommunity && !receiveOnly && <HomeReviews />}
 
       <footer className="site-footer">
         <div className="site-footer-links">
-          <span>
-            made by{" "}
-            <a
-              href="https://github.com/sponsors/schollz"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              schollz
-            </a>
-          </span>
-          <span aria-hidden="true">·</span>
+          {showCommunity && (
+            <>
+              <span>
+                made by{" "}
+                <a
+                  href="https://github.com/sponsors/schollz"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  schollz
+                </a>
+              </span>
+              <span aria-hidden="true">·</span>
+            </>
+          )}
           <a
             href={crocRepository}
             target="_blank"
@@ -1985,6 +2014,22 @@ export function App() {
             github
           </a>
           <span aria-hidden="true">·</span>
+          {!showCommunity && (
+            <>
+              <span className="footer-credit">
+                Powered by{" "}
+                <a
+                  href={crocRepository}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  croc
+                </a>{" "}
+                (MIT)
+              </span>
+              <span aria-hidden="true">·</span>
+            </>
+          )}
           <button
             className="footer-relay-link"
             type="button"
@@ -2005,19 +2050,24 @@ export function App() {
           >
             {theme === "dark" ? "light mode" : "dark mode"}
           </button>
-          <span aria-hidden="true">·</span>
-          <span>
-            hosted with{" "}
-            <a
-              href="https://disco.cloud"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              disco
-            </a>
-          </span>
+          {showCommunity && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>
+                hosted with{" "}
+                <a
+                  href="https://disco.cloud"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  disco
+                </a>
+              </span>
+            </>
+          )}
         </div>
 
+        {showCommunity && (
         <details className="tools-menu">
           <summary>other tools</summary>
           <ul>
@@ -2035,6 +2085,7 @@ export function App() {
             ))}
           </ul>
         </details>
+        )}
       </footer>
       </main>
     </>

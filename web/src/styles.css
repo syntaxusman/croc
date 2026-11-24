@@ -1,30 +1,57 @@
 :root {
-  font-family: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
-  color: #fff;
-  background: #121411;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+  font-family: var(--font-sans);
+  color: #e5e7eb;
+  background: #0b1020;
   font-synthesis: none;
-  text-rendering: geometricPrecision;
-  --canvas: #121411;
-  --background: #050605;
-  --foreground: #fff;
-  --muted: #a4a4a4;
-  --subtle: #909090;
-  --soft-border: #4b4b4b;
-  --panel-tint: #0d0f0d;
-  --danger: #fff;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  --canvas: #0b1020;
+  --background: #111827;
+  --foreground: #e5e7eb;
+  --muted: #9ca3af;
+  --subtle: #6b7280;
+  --soft-border: #263244;
+  --panel-tint: #0f172a;
+  --danger: #f87171;
+  --success: #34d399;
+  --line: #263244;
+  --line-strong: #3b4a63;
+  --accent: #6366f1;
+  --accent-strong: #818cf8;
+  --accent-soft: rgba(99, 102, 241, 0.14);
+  --accent-contrast: #fff;
+  --fill: var(--accent);
+  --on-fill: var(--accent-contrast);
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.18), 0 1px 3px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 12px 32px rgba(0, 0, 0, 0.35);
+  --ease: 150ms ease;
 }
 
 :root[data-theme="light"] {
-  color: #000;
-  background: #f2f1ec;
-  --canvas: #f2f1ec;
+  color: #0f172a;
+  background: #f5f7fb;
+  --canvas: #f5f7fb;
   --background: #fff;
-  --foreground: #000;
-  --muted: #555;
-  --subtle: #686868;
-  --soft-border: #aaa;
-  --panel-tint: #f7f6f2;
-  --danger: #000;
+  --foreground: #0f172a;
+  --muted: #475569;
+  --subtle: #64748b;
+  --soft-border: #e2e8f0;
+  --panel-tint: #f8fafc;
+  --danger: #dc2626;
+  --success: #059669;
+  --line: #e2e8f0;
+  --line-strong: #cbd5e1;
+  --accent: #4f46e5;
+  --accent-strong: #4338ca;
+  --accent-soft: rgba(79, 70, 229, 0.08);
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.08);
+  --shadow-md: 0 12px 32px rgba(15, 23, 42, 0.12);
 }
 
 * {
@@ -67,7 +94,7 @@ input:focus-visible,
 textarea:focus-visible,
 summary:focus-visible,
 a:focus-visible {
-  outline: 2px solid var(--foreground);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -81,7 +108,7 @@ a:focus-visible {
   display: grid;
   grid-template-columns: 1fr auto;
   margin-bottom: 26px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   background: var(--background);
 }
 
@@ -113,11 +140,11 @@ a:focus-visible {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid var(--foreground);
+  border-left: 1px solid var(--line);
   padding: 0 20px;
-  color: var(--background);
-  background: var(--foreground);
-  font-size: 12px;
+  color: var(--on-fill);
+  background: var(--fill);
+  font-size: 13px;
   font-weight: 800;
   text-decoration: none;
   white-space: nowrap;
@@ -144,13 +171,13 @@ a:focus-visible {
   display: block;
   width: clamp(132px, 18vw, 204px);
   height: auto;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
 }
 
 .eyebrow {
   margin: 0 0 7px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -170,7 +197,7 @@ h1 {
 }
 
 .task-launcher {
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   padding: 30px;
   background: var(--background);
 }
@@ -209,7 +236,7 @@ h1 {
 }
 
 .task-card:hover {
-  border-color: var(--foreground);
+  border-color: var(--line-strong);
   background: var(--panel-tint);
 }
 
@@ -235,7 +262,7 @@ h1 {
 .task-card small {
   display: block;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -258,7 +285,7 @@ h1 {
   padding: 8px 0;
   color: var(--foreground);
   background: transparent;
-  font-size: 12px;
+  font-size: 13px;
   cursor: pointer;
 }
 
@@ -297,14 +324,14 @@ h1 {
 }
 
 .task-switcher button:hover:not(:disabled) {
-  border-color: var(--foreground);
+  border-color: var(--line-strong);
   background: var(--panel-tint);
 }
 
 .task-switcher button[aria-pressed="true"] {
-  border-color: var(--foreground);
-  color: var(--background);
-  background: var(--foreground);
+  border-color: var(--line-strong);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .task-switcher button svg {
@@ -331,8 +358,8 @@ h1 {
 .transfer-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  border-top: 1px solid var(--foreground);
-  border-left: 1px solid var(--foreground);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
 
 .receive-panel {
@@ -352,8 +379,8 @@ h1 {
   min-height: 620px;
   flex-direction: column;
   padding: 26px;
-  border-right: 1px solid var(--foreground);
-  border-bottom: 1px solid var(--foreground);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   background: var(--background);
 }
 
@@ -372,7 +399,7 @@ h1 {
   place-items: center;
   border: 1px solid var(--soft-border);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .panel-heading .step svg {
@@ -389,7 +416,7 @@ h1 {
 .panel-heading p {
   margin: 0;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
 }
 
@@ -398,8 +425,8 @@ h1 {
 }
 
 .ssh-workspace {
-  border-top: 1px solid var(--foreground);
-  border-left: 1px solid var(--foreground);
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
 }
 
 .ssh-panel {
@@ -409,7 +436,7 @@ h1 {
 .ssh-loading {
   min-height: 180px;
   color: var(--muted);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .ssh-heading {
@@ -421,16 +448,16 @@ h1 {
   border: 1px solid var(--soft-border);
   padding: 6px 9px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .ssh-role.read-write {
-  color: var(--background);
-  border-color: var(--foreground);
-  background: var(--foreground);
+  color: var(--on-fill);
+  border-color: var(--line-strong);
+  background: var(--fill);
 }
 
 .ssh-join-form {
@@ -449,7 +476,7 @@ h1 {
   display: block;
   margin-bottom: 7px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -483,9 +510,9 @@ h1 {
 }
 
 .ssh-code-input button:hover:not(:disabled) {
-  color: var(--background);
-  border-color: var(--foreground);
-  background: var(--foreground);
+  color: var(--on-fill);
+  border-color: var(--line-strong);
+  background: var(--fill);
 }
 
 .ssh-code-input svg {
@@ -494,7 +521,7 @@ h1 {
 }
 
 .ssh-code-input:focus-within {
-  outline: 2px solid var(--foreground);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
@@ -504,7 +531,7 @@ h1 {
 }
 
 .ssh-code-input:focus-within input {
-  border-color: var(--foreground);
+  border-color: var(--line-strong);
 }
 
 .ssh-code-input:focus-within button {
@@ -518,7 +545,7 @@ h1 {
   align-items: center;
   margin-bottom: 8px;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .status-dot {
@@ -530,8 +557,8 @@ h1 {
 }
 
 .status-dot.connected {
-  border-color: var(--foreground);
-  background: var(--foreground);
+  border-color: var(--line-strong);
+  background: var(--fill);
 }
 
 .ssh-terminal {
@@ -566,7 +593,7 @@ h1 {
   align-items: flex-start;
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -591,15 +618,15 @@ h1 {
 
 .drop-zone:hover:not(:disabled),
 .drop-zone[data-dragging="true"] {
-  color: var(--background);
-  border-color: var(--foreground);
+  color: var(--on-fill);
+  border-color: var(--line-strong);
   border-style: solid;
-  background: var(--foreground);
+  background: var(--fill);
 }
 
 .drop-zone small {
   color: var(--subtle);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .drop-zone:hover small,
@@ -619,7 +646,7 @@ h1 {
   justify-content: space-between;
   padding: 9px 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .file-list {
@@ -639,7 +666,7 @@ h1 {
   min-height: 36px;
   border-bottom: 1px solid var(--soft-border);
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .file-list svg {
@@ -674,7 +701,7 @@ h1 {
 .field-label {
   display: block;
   margin: 20px 0 7px;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 750;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -688,7 +715,7 @@ input {
   padding: 0 11px;
   color: var(--foreground);
   background: var(--background);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 textarea {
@@ -699,7 +726,7 @@ textarea {
   padding: 11px;
   color: var(--foreground);
   background: var(--background);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
   resize: vertical;
 }
@@ -711,7 +738,7 @@ textarea::placeholder {
 
 input:focus,
 textarea:focus {
-  border-color: var(--foreground);
+  border-color: var(--line-strong);
 }
 
 input:disabled,
@@ -738,7 +765,7 @@ select:disabled {
   color: var(--foreground);
   background: var(--background);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .stored-expiration-control:focus-within {
@@ -762,7 +789,7 @@ select:disabled {
 
 .send-code-label {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -770,7 +797,7 @@ select:disabled {
   min-width: 0;
   color: var(--foreground);
   font-family: inherit;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
   white-space: nowrap;
 }
@@ -792,9 +819,9 @@ select:disabled {
 }
 
 .send-code-copy:hover:not(:disabled) {
-  color: var(--background);
-  border-color: var(--foreground);
-  background: var(--foreground);
+  color: var(--on-fill);
+  border-color: var(--line-strong);
+  background: var(--fill);
 }
 
 .send-code-copy svg {
@@ -819,7 +846,7 @@ select:disabled {
 
 .direct-share-link > label {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .direct-share-row {
@@ -860,8 +887,8 @@ select:disabled {
 @keyframes copy-confirmed-code {
   0%,
   40% {
-    color: var(--background);
-    background: var(--foreground);
+    color: var(--on-fill);
+    background: var(--fill);
   }
   100% {
     color: var(--foreground);
@@ -872,9 +899,9 @@ select:disabled {
 @keyframes copy-confirmed-button {
   0%,
   40% {
-    color: var(--background);
-    border-color: var(--foreground);
-    background: var(--foreground);
+    color: var(--on-fill);
+    border-color: var(--line-strong);
+    background: var(--fill);
   }
   100% {
     color: var(--foreground);
@@ -886,7 +913,7 @@ select:disabled {
 .field-help {
   margin: 8px 0 20px;
   color: var(--subtle);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -900,7 +927,7 @@ select:disabled {
   padding: 7px 0;
   color: var(--muted);
   background: transparent;
-  font-size: 10px;
+  font-size: 12px;
   text-decoration: underline;
   text-decoration-color: var(--soft-border);
   text-underline-offset: 3px;
@@ -932,7 +959,7 @@ select:disabled {
   align-items: center;
   justify-content: space-between;
   color: var(--subtle);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .text-composer-meta .error {
@@ -948,7 +975,7 @@ select:disabled {
   display: grid;
   gap: 12px;
   margin: 4px 0 18px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   padding: 14px;
   background: var(--panel-tint);
 }
@@ -957,7 +984,7 @@ select:disabled {
   display: grid;
   gap: 6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .stored-share-row {
@@ -1016,7 +1043,7 @@ select:disabled {
 .share-qr-region p {
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
   text-align: center;
 }
@@ -1029,17 +1056,17 @@ select:disabled {
   align-items: center;
   justify-content: center;
   gap: 9px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   padding: 11px 14px;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 750;
   cursor: pointer;
 }
 
 .primary-button {
   margin-top: auto;
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .primary-button:hover:not(:disabled),
@@ -1049,8 +1076,8 @@ select:disabled {
 }
 
 .primary-button.inverted:hover:not(:disabled) {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .secondary-button {
@@ -1059,8 +1086,8 @@ select:disabled {
 }
 
 .secondary-button:hover:not(:disabled) {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .primary-button svg,
@@ -1077,7 +1104,7 @@ select:disabled {
   margin: 16px 0;
   padding: 10px 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -1099,7 +1126,7 @@ select:disabled {
 
 .progress-block {
   margin: 18px 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .progress-copy,
@@ -1123,13 +1150,13 @@ select:disabled {
 
 .progress-track {
   height: 7px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
 }
 
 .progress-track span {
   display: block;
   height: 100%;
-  background: var(--foreground);
+  background: var(--fill);
   transition: width 100ms linear;
 }
 
@@ -1157,7 +1184,7 @@ select:disabled {
 
 .progress-metrics span {
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -1165,7 +1192,7 @@ select:disabled {
 .progress-metrics strong {
   overflow: hidden;
   color: var(--foreground);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -1177,7 +1204,7 @@ select:disabled {
   align-items: center;
   margin: 0 0 14px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
 }
 
 .completed-count svg {
@@ -1187,7 +1214,7 @@ select:disabled {
 
 .offer {
   margin: 2px 0 18px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   padding: 15px;
   background: var(--panel-tint);
 }
@@ -1196,7 +1223,7 @@ select:disabled {
   display: flex;
   justify-content: space-between;
   margin-bottom: 12px;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 750;
   text-transform: uppercase;
 }
@@ -1229,7 +1256,7 @@ select:disabled {
 .offer > p {
   margin: 13px 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.55;
 }
 
@@ -1237,7 +1264,7 @@ select:disabled {
   display: grid;
   gap: 11px;
   margin: 2px 0 18px;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   padding: 14px;
   background: var(--panel-tint);
 }
@@ -1247,7 +1274,7 @@ select:disabled {
   gap: 12px;
   align-items: center;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 750;
   text-transform: uppercase;
 }
@@ -1256,13 +1283,13 @@ select:disabled {
   width: auto;
   min-height: 36px;
   padding: 7px 10px;
-  font-size: 10px;
+  font-size: 12px;
   text-transform: none;
 }
 
 .received-text-heading .secondary-button.copied {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .received-text pre {
@@ -1273,7 +1300,7 @@ select:disabled {
   padding: 13px 0 0;
   color: var(--foreground);
   font: inherit;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.65;
   overflow-wrap: anywhere;
   white-space: pre-wrap;
@@ -1298,7 +1325,7 @@ select:disabled {
   padding: 0;
   overflow: auto;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   list-style: none;
 }
 
@@ -1421,8 +1448,8 @@ select:disabled {
 
 .transfer-links > a:hover,
 .transfer-links > a:focus-visible {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .transfer-links svg {
@@ -1438,13 +1465,13 @@ select:disabled {
 }
 
 .transfer-links strong {
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
 .transfer-links small {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   line-height: 1.35;
 }
 
@@ -1480,7 +1507,7 @@ select:disabled {
 .cli-download > div:first-child > p:not(.eyebrow) {
   margin: 10px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.6;
 }
 
@@ -1497,10 +1524,10 @@ select:disabled {
   gap: 8px;
   align-items: center;
   padding: 9px 12px;
-  border: 1px solid var(--foreground);
-  color: var(--background);
-  background: var(--foreground);
-  font-size: 12px;
+  border: 1px solid var(--line);
+  color: var(--on-fill);
+  background: var(--fill);
+  font-size: 13px;
   text-decoration: none;
 }
 
@@ -1530,14 +1557,14 @@ a.cli-download-primary:hover {
 
 .cli-download-primary small {
   opacity: 0.72;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .cli-download-builds {
   flex-basis: 100%;
   min-width: 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .cli-download-builds summary {
@@ -1552,7 +1579,7 @@ a.cli-download-primary:hover {
   gap: 8px 12px;
   padding-top: 4px;
   color: var(--subtle);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .cli-download-alternatives a {
@@ -1569,7 +1596,7 @@ a.cli-download-primary:hover {
   gap: 5px;
   align-items: center;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .other-releases:hover {
@@ -1643,14 +1670,14 @@ body:has(.relay-settings-modal[open]) {
   display: block;
   margin-bottom: 6px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .settings-grid input {
   height: 38px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .settings-grid .checkbox-label {
@@ -1670,7 +1697,7 @@ body:has(.relay-settings-modal[open]) {
 .settings-grid .checkbox-label span {
   margin: 0;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -1689,7 +1716,7 @@ body:has(.relay-settings-modal[open]) {
   gap: 16px;
   padding: 11px 14px;
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   cursor: pointer;
   list-style: none;
 }
@@ -1712,7 +1739,7 @@ body:has(.relay-settings-modal[open]) {
 
 .home-reviews-score strong {
   color: var(--foreground);
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .home-reviews-action {
@@ -1740,7 +1767,7 @@ body:has(.relay-settings-modal[open]) {
   padding: 13px 14px;
   border-bottom: 1px dotted var(--soft-border);
   color: var(--muted);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.5;
 }
 
@@ -1775,7 +1802,7 @@ body:has(.relay-settings-modal[open]) {
 .home-review-list blockquote > p {
   margin: 0;
   color: var(--foreground);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.55;
 }
 
@@ -1785,7 +1812,7 @@ body:has(.relay-settings-modal[open]) {
   justify-content: space-between;
   gap: 12px;
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
 }
 
 .home-review-list cite {
@@ -1822,7 +1849,7 @@ body:has(.relay-settings-modal[open]) {
   justify-content: space-between;
   padding: 18px 0;
   color: var(--subtle);
-  font-size: 10px;
+  font-size: 12px;
   letter-spacing: 0.04em;
 }
 
@@ -1894,7 +1921,7 @@ body:has(.relay-settings-modal[open]) {
   min-width: 340px;
   margin: 0;
   padding: 0;
-  border: 1px solid var(--foreground);
+  border: 1px solid var(--line);
   background: var(--background);
   box-shadow: 4px 4px 0 color-mix(in srgb, var(--foreground) 14%, transparent);
   list-style: none;
@@ -1948,7 +1975,7 @@ body:has(.relay-settings-modal[open]) {
   max-width: 720px;
   margin: 5px 0 0;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
@@ -1962,7 +1989,7 @@ body:has(.relay-settings-modal[open]) {
   min-height: 32px;
   gap: 6px;
   align-items: center;
-  font-size: 11px;
+  font-size: 13px;
   white-space: nowrap;
 }
 
@@ -1992,8 +2019,8 @@ body:has(.relay-settings-modal[open]) {
 
 .home-blog-list a:hover,
 .home-blog-list a:focus-visible {
-  color: var(--background);
-  background: var(--foreground);
+  color: var(--on-fill);
+  background: var(--fill);
 }
 
 .home-blog-list small {
@@ -3566,7 +3593,7 @@ body:has(.relay-settings-modal[open]) {
 
 .blog-not-found > span {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 13px;
   letter-spacing: 0.16em;
 }
 
@@ -3613,7 +3640,7 @@ body:has(.relay-settings-modal[open]) {
   }
 
   .donation-copy p {
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.45;
   }
 
@@ -3625,7 +3652,7 @@ body:has(.relay-settings-modal[open]) {
     min-width: 88px;
     min-height: 48px;
     border-top: 0;
-    border-left: 1px solid var(--foreground);
+    border-left: 1px solid var(--line);
     padding: 10px 12px;
   }
 
@@ -3635,7 +3662,7 @@ body:has(.relay-settings-modal[open]) {
 
   .site-header .eyebrow {
     margin-bottom: 5px;
-    font-size: 9px;
+    font-size: 12px;
     line-height: 1.45;
   }
 
@@ -3675,7 +3702,7 @@ body:has(.relay-settings-modal[open]) {
   }
 
   .task-card small {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .task-navigation {
@@ -3706,7 +3733,7 @@ body:has(.relay-settings-modal[open]) {
   }
 
   .panel-heading p {
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .ssh-panel {
@@ -3743,7 +3770,7 @@ body:has(.relay-settings-modal[open]) {
   }
 
   .drop-zone small {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .drop-desktop-copy {
@@ -3756,7 +3783,7 @@ body:has(.relay-settings-modal[open]) {
 
   .file-list li {
     min-height: 48px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .list-action {
@@ -3767,7 +3794,7 @@ body:has(.relay-settings-modal[open]) {
   .field-label {
     margin-top: 18px;
     margin-bottom: 8px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   input {
@@ -3786,11 +3813,11 @@ body:has(.relay-settings-modal[open]) {
 
   .send-content-link {
     min-height: 44px;
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .text-composer-meta {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .send-code {
@@ -3820,14 +3847,14 @@ body:has(.relay-settings-modal[open]) {
 
   .field-help {
     margin-top: 9px;
-    font-size: 11px;
+    font-size: 13px;
     line-height: 1.6;
   }
 
   .primary-button,
   .secondary-button {
     min-height: 48px;
-    font-size: 12px;
+    font-size: 13px;
   }
 
   .received-text pre {
@@ -3846,7 +3873,7 @@ body:has(.relay-settings-modal[open]) {
   .completed-count,
   .completed-files,
   .progress-block {
-    font-size: 11px;
+    font-size: 13px;
   }
 
   .settings-grid input {

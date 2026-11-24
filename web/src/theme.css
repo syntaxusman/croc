@@ -1,0 +1,548 @@
+/*
+ * Elevated theme layer, loaded after styles.css.
+ * Rounded surfaces, accent-colored actions, and sans-serif UI typography.
+ * Presentation only: it restyles existing selectors and adds none to markup
+ * except the white-label wordmark classes.
+ */
+
+body {
+  background:
+    radial-gradient(1200px 480px at 50% -220px, var(--accent-soft), transparent 70%),
+    var(--canvas);
+  line-height: 1.5;
+}
+
+code,
+pre,
+kbd,
+samp,
+#receive-code,
+.send-code-value,
+.selection-summary,
+.progress-copy,
+.progress-file,
+.progress-metrics,
+.file-list small,
+.stored-share input,
+.direct-share-row input,
+.ssh-code-input,
+.settings-grid input {
+  font-family: var(--font-mono);
+}
+
+button,
+input,
+textarea,
+select {
+  border-radius: var(--radius-sm);
+  transition:
+    color var(--ease),
+    background-color var(--ease),
+    border-color var(--ease),
+    box-shadow var(--ease);
+}
+
+details,
+.panel {
+  border-radius: var(--radius-lg);
+}
+
+a {
+  text-underline-offset: 3px;
+}
+
+.site-shell {
+  padding-top: 32px;
+}
+
+/* Header ----------------------------------------------------------------- */
+
+.site-header {
+  gap: 24px;
+  padding-bottom: 32px;
+}
+
+.site-header.white-label {
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+.brand-link {
+  justify-self: start;
+  text-decoration: none;
+}
+
+.brand-illustration {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
+.brand-wordmark {
+  display: inline-flex;
+  gap: 12px;
+  align-items: center;
+  color: var(--foreground);
+}
+
+.brand-mark {
+  display: inline-grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  box-shadow: 0 6px 16px var(--accent-soft);
+  font-size: 15px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+}
+
+.brand-name {
+  font-size: 18px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+h1 {
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* Donation banner -------------------------------------------------------- */
+
+.donation-banner {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.donation-copy svg {
+  color: var(--accent);
+}
+
+.donation-copy p {
+  font-size: 14px;
+}
+
+.donation-copy strong {
+  font-weight: 650;
+}
+
+.donation-banner > a {
+  margin: 8px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--accent-contrast);
+  background: var(--accent);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.donation-banner > a:hover {
+  color: var(--accent-contrast);
+  background: var(--accent-strong);
+}
+
+/* Task switcher: segmented control --------------------------------------- */
+
+.task-switcher {
+  gap: 4px;
+  margin-bottom: 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 4px;
+  background: var(--panel-tint);
+}
+
+.task-switcher button {
+  min-height: 44px;
+  border: 1px solid transparent;
+  color: var(--muted);
+  background: transparent;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.task-switcher button:hover:not(:disabled) {
+  border-color: transparent;
+  color: var(--foreground);
+  background: var(--accent-soft);
+}
+
+.task-switcher button[aria-pressed="true"],
+.task-switcher button[aria-pressed="true"]:hover:not(:disabled) {
+  border-color: var(--line);
+  color: var(--foreground);
+  background: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-switcher button[aria-pressed="true"] svg {
+  color: var(--accent);
+}
+
+.task-navigation button {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.task-navigation button:hover:not(:disabled) {
+  color: var(--foreground);
+}
+
+/* Task launcher cards ---------------------------------------------------- */
+
+.task-launcher {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.task-card {
+  border-radius: var(--radius);
+  transition:
+    border-color var(--ease),
+    background-color var(--ease),
+    box-shadow var(--ease),
+    transform var(--ease);
+}
+
+.task-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.task-card-icon {
+  color: var(--accent);
+}
+
+/* Panels ----------------------------------------------------------------- */
+
+.transfer-grid,
+.ssh-workspace {
+  gap: 16px;
+  border: 0;
+}
+
+.panel {
+  border: 1px solid var(--line);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+}
+
+.panel-heading {
+  align-items: center;
+}
+
+.panel-heading .step {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 10px;
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.panel-heading .step svg {
+  width: 18px;
+  height: 18px;
+}
+
+.panel-heading h2 {
+  margin-bottom: 4px;
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.panel-heading p {
+  font-size: 14px;
+}
+
+/* Drop zone -------------------------------------------------------------- */
+
+.drop-zone {
+  min-height: 148px;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--panel-tint);
+  font-size: 15px;
+  font-weight: 600;
+  transition:
+    border-color var(--ease),
+    background-color var(--ease);
+}
+
+.drop-zone:hover:not(:disabled),
+.drop-zone[data-dragging="true"] {
+  border-style: dashed;
+  border-color: var(--accent);
+  color: var(--foreground);
+  background: var(--accent-soft);
+}
+
+.drop-zone small {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.drop-zone:hover small,
+.drop-zone[data-dragging="true"] small {
+  color: var(--muted);
+}
+
+/* Forms ------------------------------------------------------------------ */
+
+.field-label {
+  margin: 22px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+input,
+textarea {
+  border: 1px solid var(--line-strong);
+  font-size: 14px;
+}
+
+input {
+  height: 44px;
+  padding: 0 14px;
+}
+
+textarea {
+  padding: 12px 14px;
+}
+
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.field-help {
+  font-size: 13px;
+}
+
+.stored-expiration-control {
+  gap: 8px;
+}
+
+.stored-expiration-control input {
+  border-right: 1px solid var(--line-strong);
+}
+
+.stored-expiration-control select {
+  height: 44px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.stored-expiration-control:focus-within {
+  box-shadow: none;
+}
+
+.stored-expiration-control input:focus,
+.stored-expiration-control select:focus {
+  border-color: var(--accent);
+  outline: none;
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* Buttons ---------------------------------------------------------------- */
+
+.primary-button,
+.secondary-button {
+  min-height: 46px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.primary-button {
+  border: 1px solid transparent;
+  color: var(--accent-contrast);
+  background: var(--accent);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.primary-button:hover:not(:disabled) {
+  color: var(--accent-contrast);
+  background: var(--accent-strong);
+}
+
+.primary-button.inverted {
+  border-color: var(--line-strong);
+  color: var(--foreground);
+  background: transparent;
+  box-shadow: none;
+}
+
+.primary-button.inverted:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-contrast);
+  background: var(--accent);
+}
+
+.primary-button:disabled {
+  border-color: var(--line);
+  color: var(--muted);
+  background: var(--panel-tint);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.secondary-button {
+  border: 1px solid var(--line-strong);
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.secondary-button:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--foreground);
+  background: var(--accent-soft);
+}
+
+/* Status, progress, results ---------------------------------------------- */
+
+.status-message {
+  font-size: 13px;
+}
+
+.status-message.error {
+  border: 1px solid color-mix(in srgb, var(--danger) 35%, transparent);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--danger) 8%, transparent);
+}
+
+.status-message.done {
+  color: var(--success);
+}
+
+.progress-block {
+  font-size: 12px;
+}
+
+.progress-track {
+  height: 8px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: var(--panel-tint);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.progress-track span {
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
+.selection-summary {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.send-code,
+.stored-share,
+.direct-share-link,
+.offer,
+.text-composer,
+.share-qr-code {
+  border-radius: var(--radius);
+}
+
+/* Home resources, reviews, links ----------------------------------------- */
+
+.home-resources.single {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.cli-download,
+.home-blog-teaser,
+.home-reviews {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--background);
+  box-shadow: var(--shadow-sm);
+}
+
+.cli-download h2,
+.home-blog-teaser h2 {
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.cli-download-primary {
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--accent-contrast);
+  background: var(--accent);
+}
+
+.cli-download-primary:hover {
+  color: var(--accent-contrast);
+  background: var(--accent-strong);
+}
+
+.cli-download-primary small {
+  color: inherit;
+  opacity: 0.8;
+}
+
+/* Relay settings dialog -------------------------------------------------- */
+
+.relay-settings-modal {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+}
+
+.relay-settings-modal::backdrop {
+  background: rgba(2, 6, 23, 0.6);
+  backdrop-filter: blur(2px);
+}
+
+/* Footer ----------------------------------------------------------------- */
+
+.site-footer {
+  margin-top: 40px;
+  border-top: 1px solid var(--line);
+  padding-top: 20px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.site-footer a,
+.footer-relay-link,
+.footer-theme-toggle {
+  color: var(--muted);
+}
+
+.site-footer a:hover,
+.footer-relay-link:hover,
+.footer-theme-toggle:hover {
+  color: var(--foreground);
+}
+
+.footer-credit a {
+  color: var(--foreground);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .task-card:hover {
+    transform: none;
+  }
+}

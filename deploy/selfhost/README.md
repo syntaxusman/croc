@@ -52,6 +52,8 @@ repository root (no Caddy) instead of this directory's compose file:
 3. **Environment variables:** `SITE_HOST`, `RELAY_HOST`, `CROC_PASS`, and
    optionally `STORE_DOWNLOADS`, `STORE_MAX_TRANSFER`, `STORE_QUOTA`,
    `STORE_MIN_FREE`, `STORE_MAX_EXPIRATION`. Mark `CROC_PASS` as a secret.
+   For white-labeling add `BRAND_NAME` (for example `Straton Ally Transfer`)
+   and `HIDE_COMMUNITY=true`.
 4. **Domains:** set the `web` service to `https://transfer.example.com:8080`
    (the `:8080` tells Coolify the container port). Leave `relay` empty.
 5. Open TCP 9009-9017 in the server firewall (and any cloud security group).

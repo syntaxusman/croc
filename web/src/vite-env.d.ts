@@ -19,6 +19,10 @@ interface Window {
     ): void;
   };
   __CROC_RUNTIME_CONFIG__?: {
+    brand?: {
+      name?: string;
+      community?: boolean;
+    };
     gatewayURL?: string;
     relayAddresses?: string[];
     relayPassword?: string;
