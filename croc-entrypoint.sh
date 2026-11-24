@@ -37,11 +37,13 @@ relay_ports=${CROC_RELAY_PORTS:-${CROC_PORTS:-}}
 
 case "$service" in
     web)
+        # Prepend flags: croc-web stops parsing flags at its positional
+        # public-host argument, so appended flags would become extra hosts.
         if [ -n "${STORE_DIR:-}" ] && ! has_option --store-dir "$@"; then
-            set -- "$@" --store-dir "$STORE_DIR"
+            set -- --store-dir "$STORE_DIR" "$@"
         fi
         if [ -n "$relay_ports" ] && ! has_option --ports "$@"; then
-            set -- "$@" --ports "$relay_ports"
+            set -- --ports "$relay_ports" "$@"
         fi
         if [ -n "${SITE_URL:-}" ]; then
             set -- "$@" "$SITE_URL"

@@ -1,0 +1,83 @@
+# Self-hosted croc for Coolify (Docker Compose build pack).
+#
+# Coolify settings:
+#   Docker Compose Location: /docker-compose.coolify.yml
+#   Domains for "web":       https://<SITE_HOST>:8080
+#   Domains for "relay":     leave empty (raw TCP, published directly)
+#   Environment variables:   SITE_HOST, RELAY_HOST, CROC_PASS (+ optional STORE_*)
+#
+# Coolify's proxy (Traefik) terminates HTTPS for the web UI. The relay speaks
+# raw TCP, so ports 9009-9017 are published on the host and must be open in
+# the server firewall. See deploy/selfhost/README.md for details.
+
+services:
+  relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        CROC_RELAY_POOL: ${RELAY_HOST:?}:9009
+        CROC_WEB_URL: https://${SITE_HOST:?}
+    command: ["relay"]
+    restart: unless-stopped
+    environment:
+      CROC_PASS: ${CROC_PASS:?}
+      CROC_RELAY_PORTS: 9009,9010,9011,9012,9013,9014,9015,9016,9017
+    ports:
+      - "9009-9017:9009-9017/tcp"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        CROC_RELAY_POOL: ${RELAY_HOST:?}:9009
+        CROC_WEB_URL: https://${SITE_HOST:?}
+    command:
+      - web
+      - --bind
+      - 0.0.0.0:8080
+      - --relays
+      - ${RELAY_HOST:?}
+      - --store-dir
+      - /www/croc/storage
+      - --store-max-transfer
+      - ${STORE_MAX_TRANSFER:-1GiB}
+      - --store-quota
+      - ${STORE_QUOTA:-5GiB}
+      - --store-min-free
+      - ${STORE_MIN_FREE:-512MiB}
+      - --store-max-expiration
+      - ${STORE_MAX_EXPIRATION:-2w}
+      # Only Coolify's proxy can reach port 8080, so trusting private ranges
+      # lets the storage rate limits see each visitor's real IP.
+      - --store-trusted-proxy
+      - 10.0.0.0/8
+      - --store-trusted-proxy
+      - 172.16.0.0/12
+      - --store-trusted-proxy
+      - 192.168.0.0/16
+      - ${SITE_HOST:?}
+    restart: unless-stopped
+    depends_on:
+      - relay
+    environment:
+      CROC_PASS: ${CROC_PASS:?}
+      CROC_RELAY_PORTS: 9009,9010,9011,9012,9013,9014,9015,9016,9017
+      CROC_STORE_DOWNLOADS: ${STORE_DOWNLOADS:-1}
+    expose:
+      - "8080"
+    # Reach the relay by its public name through the host's published ports,
+    # without relying on hairpin NAT or Coolify's network names.
+    extra_hosts:
+      - "${RELAY_HOST:?}:host-gateway"
+    volumes:
+      - croc-store:/www/croc/storage
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/healthz >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  croc-store:

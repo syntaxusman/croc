@@ -42,6 +42,22 @@ Check the relay from any machine:
 croc --relay relay.example.com:9009 --pass YOUR_PASS send somefile
 ```
 
+### Deploying with Coolify instead
+
+Coolify runs its own HTTPS proxy, so use `docker-compose.coolify.yml` in the
+repository root (no Caddy) instead of this directory's compose file:
+
+1. **New resource → Public/Private repository → Build pack: Docker Compose.**
+2. **Docker Compose Location:** `/docker-compose.coolify.yml` (base directory `/`).
+3. **Environment variables:** `SITE_HOST`, `RELAY_HOST`, `CROC_PASS`, and
+   optionally `STORE_DOWNLOADS`, `STORE_MAX_TRANSFER`, `STORE_QUOTA`,
+   `STORE_MIN_FREE`, `STORE_MAX_EXPIRATION`. Mark `CROC_PASS` as a secret.
+4. **Domains:** set the `web` service to `https://transfer.example.com:8080`
+   (the `:8080` tells Coolify the container port). Leave `relay` empty.
+5. Open TCP 9009-9017 in the server firewall (and any cloud security group).
+   Coolify's proxy only handles HTTP; the relay ports are published directly.
+6. Deploy. `https://transfer.example.com/healthz` should return `ok`.
+
 ## 3. Build client binaries for your staff
 
 Codes are routed by their index in the relay pool, so every client that
