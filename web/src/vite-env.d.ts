@@ -4,6 +4,8 @@ interface ImportMetaEnv {
   readonly VITE_CROC_GATEWAY_URL?: string;
   readonly VITE_CROC_RELAY_ADDRESSES?: string;
   readonly VITE_CROC_RELAY_PASSWORD?: string;
+  /** White-label product name; "" keeps croc branding. Defined in vite.config.ts. */
+  readonly VITE_BRAND_NAME: string;
 }
 
 interface ImportMeta {
@@ -19,10 +21,6 @@ interface Window {
     ): void;
   };
   __CROC_RUNTIME_CONFIG__?: {
-    brand?: {
-      name?: string;
-      community?: boolean;
-    };
     gatewayURL?: string;
     relayAddresses?: string[];
     relayPassword?: string;

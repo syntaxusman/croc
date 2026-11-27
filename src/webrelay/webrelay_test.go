@@ -164,7 +164,7 @@ func TestServesSiteAndRuntimeConfig(t *testing.T) {
 	assert.Equal(t, "no-store", recorder.Header().Get("Cache-Control"))
 	assert.JSONEq(
 		t,
-		`{"gatewayURL":"/ws","relayAddresses":["relay.example.test:9109"],"relayPassword":"relay-secret","store":{"enabled":false,"maxTransferBytes":0,"maxFiles":0,"maxDownloads":0,"expiresSeconds":0,"maxExpiresSeconds":0},"brand":{"community":true}}`,
+		`{"gatewayURL":"/ws","relayAddresses":["relay.example.test:9109"],"relayPassword":"relay-secret","store":{"enabled":false,"maxTransferBytes":0,"maxFiles":0,"maxDownloads":0,"expiresSeconds":0,"maxExpiresSeconds":0}}`,
 		strings.TrimSuffix(
 			strings.TrimPrefix(recorder.Body.String(), "window.__CROC_RUNTIME_CONFIG__ = "),
 			";\n",
@@ -650,15 +650,15 @@ func TestRejectsUnexpectedOrigin(t *testing.T) {
 	assert.Equal(t, http.StatusForbidden, response.StatusCode)
 }
 
-func TestBrandNameAndCommunityFlagReachPagesAndConfig(t *testing.T) {
+func TestBrandNameSetsTitlesAndDisablesUpstreamInstaller(t *testing.T) {
 	site := testSite()
 	site["index.html"] = &fstest.MapFile{Data: []byte("<!doctype html><html><head><title>croc — fast, simple, secure file transfer</title></head><body><div id=\"root\"></div></body></html>")}
+	delete(site, "default.txt")
 	handler, err := Handler(Config{
-		RelayHost:     "relay.example.test",
-		AllowedPorts:  []string{"9109"},
-		StaticFiles:   site,
-		BrandName:     "  Acme <Transfer>  ",
-		HideCommunity: true,
+		RelayHost:    "relay.example.test",
+		AllowedPorts: []string{"9109"},
+		StaticFiles:  site,
+		BrandName:    "  Acme <Transfer>  ",
 	})
 	require.NoError(t, err)
 
@@ -670,10 +670,18 @@ func TestBrandNameAndCommunityFlagReachPagesAndConfig(t *testing.T) {
 		assert.NotContains(t, recorder.Body.String(), "<title>croc", target)
 	}
 
+	request := httptest.NewRequest(http.MethodGet, "/", nil)
+	request.Header.Set("User-Agent", "curl/8.5.0")
 	recorder := httptest.NewRecorder()
+	handler.ServeHTTP(recorder, request)
+	require.Equal(t, http.StatusOK, recorder.Code)
+	assert.Contains(t, recorder.Body.String(), `id="root"`)
+	assert.NotContains(t, recorder.Body.String(), testInstaller)
+
+	recorder = httptest.NewRecorder()
 	handler.ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/config.js", nil))
 	require.Equal(t, http.StatusOK, recorder.Code)
-	assert.Contains(t, recorder.Body.String(), `"brand":{"name":"Acme \u003cTransfer\u003e","community":false}`)
+	assert.NotContains(t, recorder.Body.String(), "brand")
 }
 
 func TestInjectBrandTitleLeavesPagesWithoutBrandOrTitleUnchanged(t *testing.T) {

@@ -27,7 +27,7 @@ export class FrameDecoder {
       for (let index = 0; index < MAGIC.byteLength; index += 1) {
         if (this.buffer[offset + index] !== MAGIC[index]) {
           this.buffer = new Uint8Array();
-          throw new Error("Relay stream did not start with croc framing");
+          throw new Error("Relay stream did not start with transfer framing");
         }
       }
       const length = new DataView(
@@ -62,7 +62,7 @@ export class FrameDecoder {
     for (let index = 0; index < MAGIC.byteLength; index += 1) {
       if (this.buffer[index] !== MAGIC[index]) {
         this.buffer = new Uint8Array();
-        throw new Error("Relay stream did not start with croc framing");
+        throw new Error("Relay stream did not start with transfer framing");
       }
     }
     const length = new DataView(

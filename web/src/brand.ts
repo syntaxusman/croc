@@ -1,12 +1,16 @@
-// White-label settings injected by croc-web (--brand-name, --hide-community).
-// Without them the client keeps the upstream croc branding and content.
-const runtimeBrand =
-  (typeof window === "undefined" ? undefined : window.__CROC_RUNTIME_CONFIG__?.brand) ??
-  {};
+// White-label branding is compiled in from VITE_BRAND_NAME (see
+// vite.config.ts). Because the values are build-time constants, a branded
+// build drops the upstream croc content, links, and blog from the bundle
+// entirely. An empty value keeps the upstream croc site unchanged.
+const configuredBrand: string = import.meta.env.VITE_BRAND_NAME;
 
-export const brandName = runtimeBrand.name?.trim() || "croc";
-export const isWhiteLabel = brandName !== "croc";
-export const showCommunity = runtimeBrand.community !== false;
+export const isWhiteLabel = configuredBrand !== "";
+export const brandName = isWhiteLabel ? configuredBrand : "croc";
+export const showCommunity = !isWhiteLabel;
+
+/** "croc code" upstream, "transfer code" in white-label builds. */
+export const codeLabel = isWhiteLabel ? "transfer code" : "croc code";
+export const CodeLabel = isWhiteLabel ? "Transfer code" : "Croc code";
 
 export function brandInitials(name = brandName): string {
   const words = name.split(/\s+/).filter(Boolean);

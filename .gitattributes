@@ -3,3 +3,4 @@
 *.sh text eol=lf
 Dockerfile text eol=lf
 Caddyfile text eol=lf
+src/codephrase/wordlists/*.txt text eol=lf

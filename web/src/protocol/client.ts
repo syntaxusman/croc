@@ -72,7 +72,7 @@ function checkAbort(signal?: AbortSignal) {
 export function requirePakeVersion(version: number | undefined) {
   if (version !== PAKE_PROTOCOL_VERSION) {
     throw new Error(
-      `Peer uses unsupported PAKE protocol version ${version ?? 0}; upgrade both croc clients`,
+      `Peer uses unsupported PAKE protocol version ${version ?? 0}; upgrade both clients`,
     );
   }
 }
@@ -432,7 +432,7 @@ export async function sendFiles(options: {
 
     const peerPake = await receiveControl(control);
     if (peerPake.t !== "pake" || !peerPake.b || !peerPake.b2) {
-      throw new Error("Recipient did not start a croc PAKE handshake");
+      throw new Error("Recipient did not start a PAKE handshake");
     }
     requirePakeVersion(peerPake.v);
     const curve = textDecoder.decode(peerPake.b2);
@@ -465,7 +465,7 @@ export async function sendFiles(options: {
     });
     const confirmationA = await receiveControl(control);
     if (confirmationA.t !== "pake-confirm" || !confirmationA.b) {
-      throw new Error("Recipient did not confirm the croc PAKE handshake");
+      throw new Error("Recipient did not confirm the PAKE handshake");
     }
     requirePakeVersion(confirmationA.v);
     if (
@@ -903,7 +903,7 @@ export async function receiveFiles(options: {
     });
     const peerPake = await receiveControl(control);
     if (peerPake.t !== "pake" || !peerPake.b || !peerPake.b2) {
-      throw new Error("Sender did not complete the croc PAKE handshake");
+      throw new Error("Sender did not complete the PAKE handshake");
     }
     requirePakeVersion(peerPake.v);
     if (peerPake.b2.byteLength !== PAKE_SALT_SIZE) {
@@ -928,7 +928,7 @@ export async function receiveFiles(options: {
     });
     const confirmationB = await receiveControl(control);
     if (confirmationB.t !== "pake-confirm" || !confirmationB.b) {
-      throw new Error("Sender did not confirm the croc PAKE handshake");
+      throw new Error("Sender did not confirm the PAKE handshake");
     }
     requirePakeVersion(confirmationB.v);
     if (

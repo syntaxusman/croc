@@ -24,6 +24,8 @@ import crocIllustration from "./assets/croc.jpg?inline";
 import {
   brandInitials,
   brandName,
+  CodeLabel,
+  codeLabel,
   isWhiteLabel,
   showCommunity,
 } from "./brand";
@@ -266,12 +268,16 @@ const defaultSettings: TransferSettings = {
     runtimeSettings.relayAddresses?.filter(Boolean) ||
     import.meta.env.VITE_CROC_RELAY_ADDRESSES?.split(",")
       .map((address) => address.trim())
-      .filter(Boolean) || [
-      "1.getcroc.com:9009",
-      "2.getcroc.com:9009",
-      "3.getcroc.com:9009",
-      "4.getcroc.com:9009",
-    ],
+      .filter(Boolean) ||
+    // croc-web always injects its relays; this fallback serves dev builds.
+    (isWhiteLabel
+      ? []
+      : [
+          "1.getcroc.com:9009",
+          "2.getcroc.com:9009",
+          "3.getcroc.com:9009",
+          "4.getcroc.com:9009",
+        ]),
   relayPassword:
     runtimeSettings.relayPassword ||
     import.meta.env.VITE_CROC_RELAY_PASSWORD ||
@@ -847,7 +853,7 @@ export function App() {
     if (!requestedReceiveValue) return;
     if (!isStoredShareValue(requestedReceiveValue) && requestedReceiveValue.length < 6) {
       setReceiveActivity("error");
-      setReceiveStatus("The croc code in this link is too short");
+      setReceiveStatus(`The ${codeLabel} in this link is too short`);
       return;
     }
     void startReceive();
@@ -1493,7 +1499,7 @@ export function App() {
                 <span className="send-code-label">Use this code:</span>
                 <code
                   className={`send-code-value ${codeCopyState}`}
-                  aria-label="Croc code"
+                  aria-label={CodeLabel}
                 >
                   {sendCode}
                 </code>
@@ -1701,7 +1707,7 @@ export function App() {
               <h2>Receive</h2>
               {!receiveOnly && (
                 <p>
-                  Enter a croc code or encrypted stored link. Review before saving
+                  Enter a {codeLabel} or encrypted stored link. Review before saving
                   or displaying.
                 </p>
               )}
@@ -1711,7 +1717,7 @@ export function App() {
           {!receiveOnly && (
             <>
               <label className="field-label" htmlFor="receive-code">
-                Croc code or stored link
+                {CodeLabel} or stored link
               </label>
               <input
                 id="receive-code"
@@ -1980,18 +1986,18 @@ export function App() {
         </div>
       </dialog>
 
-      <div
-        className={`home-resources${showCommunity ? "" : " single"}`}
-      >
-        <CliDownload />
-        {showCommunity && <BlogTeaser />}
-      </div>
+      {showCommunity && (
+        <div className="home-resources">
+          <CliDownload />
+          <BlogTeaser />
+        </div>
+      )}
 
       {showCommunity && !receiveOnly && <HomeReviews />}
 
       <footer className="site-footer">
         <div className="site-footer-links">
-          {showCommunity && (
+          {showCommunity ? (
             <>
               <span>
                 made by{" "}
@@ -2004,32 +2010,20 @@ export function App() {
                 </a>
               </span>
               <span aria-hidden="true">·</span>
+              <a
+                href={crocRepository}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                github
+              </a>
             </>
+          ) : (
+            <span className="footer-credit">
+              © {new Date().getFullYear()} {brandName}
+            </span>
           )}
-          <a
-            href={crocRepository}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            github
-          </a>
           <span aria-hidden="true">·</span>
-          {!showCommunity && (
-            <>
-              <span className="footer-credit">
-                Powered by{" "}
-                <a
-                  href={crocRepository}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  croc
-                </a>{" "}
-                (MIT)
-              </span>
-              <span aria-hidden="true">·</span>
-            </>
-          )}
           <button
             className="footer-relay-link"
             type="button"

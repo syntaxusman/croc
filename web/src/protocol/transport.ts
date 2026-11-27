@@ -100,7 +100,7 @@ export class CrocSocket {
       const onError = () => {
         cleanup();
         crocSocket.close();
-        reject(new Error("Could not connect to the croc WebSocket gateway"));
+        reject(new Error("Could not connect to the WebSocket gateway"));
       };
       const onAbort = () => {
         cleanup();

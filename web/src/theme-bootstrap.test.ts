@@ -52,7 +52,7 @@ describe("theme bootstrap", () => {
     expect(document.documentElement.style.colorScheme).toBe("light");
     expect(document.querySelector('meta[name="theme-color"]')).toHaveAttribute(
       "content",
-      "#f2f1ec",
+      "#f5f7fb",
     );
     expect(indexHTML.indexOf("data-croc-theme-bootstrap")).toBeLessThan(
       indexHTML.indexOf('type="module"'),

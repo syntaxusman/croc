@@ -130,7 +130,7 @@ async function authorize(
   const engine = protocolEngine();
   const components = await engine.sshCodeComponents(code);
   if (settings.relayAddresses.length === 0) {
-    throw new Error("No croc relay is configured");
+    throw new Error("No relay is configured");
   }
   const relayIndex = await engine.relayIndex(
     code,
@@ -371,7 +371,7 @@ export class SSHJoinSession {
           window.clearTimeout(authTimer);
           this.options.callbacks?.onConnected?.(true);
           this.options.callbacks?.onStatus?.(
-            `Connected with ${role} access via the croc relay`,
+            `Connected with ${role} access via the relay`,
           );
         } else if (event.type === "closed") {
           closeSession({ clean: event.clean, message: event.message });

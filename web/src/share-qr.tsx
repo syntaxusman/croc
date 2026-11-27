@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from "react";
 import { QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import { brandName } from "./brand";
 
 type ShareQRCodeProps = {
   value: string;
@@ -57,7 +58,7 @@ export function ShareQRCode({
               marginSize={4}
               bgColor="#ffffff"
               fgColor="#050605"
-              title="Scan to open the croc receive page"
+              title={`Scan to open the ${brandName} receive page`}
             />
           </div>
           <p>{description}</p>

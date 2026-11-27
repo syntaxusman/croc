@@ -101,7 +101,7 @@ export async function connectRelay(
     if (signal?.aborted) throw error;
     if (error instanceof RelayConnectionError) throw error;
     throw new RelayConnectionError(
-      `Could not establish the croc relay connection: ${errorMessage(error)}`,
+      `Could not establish the relay connection: ${errorMessage(error)}`,
       error,
     );
   } finally {

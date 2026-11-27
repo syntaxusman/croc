@@ -10,8 +10,11 @@ RUN go mod download
 
 COPY . .
 
+# Optional white-label product name. When set, the web client is built with
+# that brand and without upstream croc content, links, blog, or installer.
+ARG CROC_BRAND_NAME=
 RUN npm ci --prefix web \
-    && npm run embed --prefix web
+    && VITE_BRAND_NAME="$CROC_BRAND_NAME" npm run embed --prefix web
 
 ARG TARGETOS
 ARG TARGETARCH

@@ -570,7 +570,7 @@ function blobDownloadDestination(offer: TransferOffer) {
   );
   if (largest > maxBlobDownloadBytes) {
     throw new Error(
-      "This browser cannot stream a file this large. Receive it with the croc CLI instead.",
+      "This browser cannot stream a file this large. Receive it with the command-line client instead.",
     );
   }
   return new DownloadDestination();

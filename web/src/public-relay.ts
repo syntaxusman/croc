@@ -54,7 +54,7 @@ export function loadBestRelay(
     clearBestRelay(cookieStore);
     return undefined;
   }
-  console.debug("croc using cached public relay", { relayIndex, address });
+  console.debug("using cached relay", { relayIndex, address });
   return relayIndex;
 }
 
@@ -125,7 +125,7 @@ export async function selectBestRelay(
           relayProbeTimeoutMs,
           controller.signal,
         );
-        console.debug("croc public relay probe won", {
+        console.debug("relay probe won", {
           relayIndex,
           address,
           duration,

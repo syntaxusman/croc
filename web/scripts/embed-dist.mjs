@@ -15,5 +15,8 @@ const installer = path.resolve(
 await rm(destination, { recursive: true, force: true });
 await mkdir(destination, { recursive: true });
 await cp(source, destination, { recursive: true });
-await cp(installer, path.join(destination, "default.txt"));
+// White-label builds ship no upstream installer script.
+if (!(process.env.VITE_BRAND_NAME ?? "").trim()) {
+  await cp(installer, path.join(destination, "default.txt"));
+}
 await writeFile(path.join(destination, ".gitkeep"), "");

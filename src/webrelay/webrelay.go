@@ -52,12 +52,10 @@ type Config struct {
 	UmamiWebsiteID string
 	GoogleAdSense  string
 	GoogleAdsTXT   string
-	// BrandName white-labels the web client: it replaces the product name in
-	// the UI and the HTML <title>. Empty keeps the croc branding.
+	// BrandName marks a white-label deployment: it sets the HTML <title> and
+	// disables the upstream CLI installer served to curl at "/". The web
+	// client's own branding is compiled in with VITE_BRAND_NAME.
 	BrandName string
-	// HideCommunity hides upstream croc community content (donation banner,
-	// sponsor links, blog, and reviews) in the web client.
-	HideCommunity bool
 
 	trackCurlInstaller func()
 }
@@ -76,12 +74,6 @@ type runtimeConfig struct {
 	RelayAddresses []string           `json:"relayAddresses"`
 	RelayPassword  string             `json:"relayPassword"`
 	Store          store.PublicConfig `json:"store"`
-	Brand          runtimeBrand       `json:"brand"`
-}
-
-type runtimeBrand struct {
-	Name      string `json:"name,omitempty"`
-	Community bool   `json:"community"`
 }
 
 // Handler returns the unified croc web handler. It serves the embedded client,
@@ -124,10 +116,6 @@ func Handler(config Config) (http.Handler, error) {
 				}
 				return normalized.StoreService.PublicConfig()
 			}(),
-			Brand: runtimeBrand{
-				Name:      strings.TrimSpace(normalized.BrandName),
-				Community: !normalized.HideCommunity,
-			},
 		},
 		static: static,
 	}
@@ -462,9 +450,13 @@ func newStaticHandler(
 	if !exists {
 		return nil, fmt.Errorf("embedded web client is missing index.html")
 	}
-	installer, err := fs.ReadFile(files, "default.txt")
-	if err != nil {
-		return nil, fmt.Errorf("embedded web client is missing default.txt: %w", err)
+	// White-label deployments do not serve the upstream installer script.
+	var installer []byte
+	if strings.TrimSpace(brandName) == "" {
+		installer, err = fs.ReadFile(files, "default.txt")
+		if err != nil {
+			return nil, fmt.Errorf("embedded web client is missing default.txt: %w", err)
+		}
 	}
 	return &staticHandler{
 		files:              files,
@@ -591,7 +583,7 @@ func (h *staticHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path == "/" {
 		w.Header().Set("Vary", "User-Agent")
 	}
-	if r.URL.Path == "/" && requestsInstaller(r.UserAgent()) {
+	if r.URL.Path == "/" && len(h.installer) > 0 && requestsInstaller(r.UserAgent()) {
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Content-Length", strconv.Itoa(len(h.installer)))
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")

@@ -257,7 +257,7 @@ describe("stored browser download destination", () => {
     const selecting = storage.chooseStoredReceiveDestination(
       storedOffer(256 * 1024 * 1024 + 1),
     );
-    const rejected = expect(selecting).rejects.toThrow(/croc CLI/i);
+    const rejected = expect(selecting).rejects.toThrow(/command-line client/i);
     await vi.advanceTimersByTimeAsync(10_000);
 
     await rejected;

@@ -27,7 +27,7 @@ describe("croc framing", () => {
   it("rejects invalid magic bytes", () => {
     const frame = encodeFrame(new Uint8Array([1]));
     frame[0] = 0;
-    expect(() => new FrameDecoder().push(frame)).toThrow(/croc framing/i);
+    expect(() => new FrameDecoder().push(frame)).toThrow(/transfer framing/i);
   });
 
   it("rejects oversized writes and advertised reads", () => {

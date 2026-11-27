@@ -466,10 +466,6 @@ textarea:focus {
 
 /* Home resources, reviews, links ----------------------------------------- */
 
-.home-resources.single {
-  grid-template-columns: minmax(0, 1fr);
-}
-
 .cli-download,
 .home-blog-teaser,
 .home-reviews {

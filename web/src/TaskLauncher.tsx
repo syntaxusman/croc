@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Download, Link, SquareTerminal, Upload } from "lucide-react";
+import { codeLabel } from "./brand";
 
 export type Task = "home" | "send" | "store" | "receive" | "ssh";
 
@@ -140,7 +141,7 @@ export function TaskLauncher({
   const tasks = [
     { task: "send", icon: Upload, description: "Send to someone who is online now." },
     ...(storeEnabled ? [{ task: "store" as const, icon: Link, description: "Share an encrypted link. Download later." }] : []),
-    { task: "receive", icon: Download, description: "Open a croc code or encrypted link." },
+    { task: "receive", icon: Download, description: `Open a ${codeLabel} or encrypted link.` },
     { task: "ssh", icon: SquareTerminal, description: "Join a shared terminal with an invitation." },
   ] as const;
   return (
